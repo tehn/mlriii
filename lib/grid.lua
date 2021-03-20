@@ -106,16 +106,19 @@ end
 g.key.track = function(x,y,z)
   local w = (state.window-1)*6
   if z==1 then
+    local t = y-2+w
+    tr = t
     if x<5 then
-      track[y-2+w].group = x
+      track[t].group = x
     elseif x>5 and x<15 then
       -- FIXME: UPDATE PARAM, but for now:
-      track[y-2+w].octave = x-10
+      track[t].octave = x-10
     elseif x==16 then
       -- FIXME: update PARAM
-      track[y-2+w].rev = -track[y-2+w].rev
+      track[t].rev = -track[t].rev
     end
     g.dirty = true
+    ui.dirty = true
   end
 end
 

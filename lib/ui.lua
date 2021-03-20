@@ -59,6 +59,14 @@ ui.redraw.track = function()
   screen.text("track")
   screen.move(127,12)
   screen.text_right(tr)
+
+  screen.font_size(8)
+  screen.move(0,62)
+  screen.text("group: "..track[tr].group)
+  screen.move(48,62)
+  screen.text("octave: "..track[tr].octave)
+  screen.move(127,62)
+  screen.text_right(track[tr].rev == 1 and ">" or "<")
 end
 
 ui.key.track = function(n,z)
