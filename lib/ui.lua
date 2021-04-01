@@ -144,14 +144,17 @@ function clip_fileselect(path, c)
       local ch, len = audio.file_info(path)
       print("file length > "..len/48000)
       -- -1 = read whole file
-      softcut.buffer_read_mono(path, 0, clip[c].pos_start, -1, 1, 1)
+      softcut.buffer_read_mono(path, 0, clip[c].pos_start, -1, clip[c].ch, 1)
       local l = math.min(len/48000, math.huge) --FIX, huge should be something legit
-      --set_clip_length(track[c].clip, l)
-      clip[c].name = path:match("[^/]*$")
-      -- TODO: STRIP extension
-      --set_clip(c,track[c].clip)
+      clip[c].name = path:match("[^/]*$") -- TODO: STRIP extension
       --update_rate(c)
       --params:set(c.."file",path)
+      for i=1,4 do -- refresh possibly active group-track-clip
+        sc.set_clip(i)
+      end
+      for i=1,24 do -- recalc cuts for tracks using clip
+        if track[i].clip == c then calc_cuts(i) end
+      end
     else
       print("not a sound file")
     end

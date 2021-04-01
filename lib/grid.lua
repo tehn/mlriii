@@ -91,9 +91,13 @@ end
 g.redraw.track = function()
   local w = (state.window-1)*6
   for i=1,6 do 
+    local grp = track[i+w].group
     -- group
-    for n=1,4 do gr:led(n,i+2,2) end
-    gr:led(track[i+w].group,i+2,10)
+    for n=1,4 do gr:led(n,i+2,2) end -- background highlight
+    gr:led(grp,i+2,alt and 10 or 5) -- selected group
+    if group[grp].track == i+w then
+      gr:led(grp,i+2,group[grp].play and 15 or 10) -- active track in group
+    end
     -- octave + rev
     for n=6,14 do gr:led(n,i+2,2) end
     gr:led(10,i+2,0)
@@ -109,7 +113,14 @@ g.key.track = function(x,y,z)
     local t = y-2+w
     tr = t
     if x<5 then
-      track[t].group = x
+      if alt then
+        print("ALT")
+        track[t].group = x
+        -- FIXME: DE-ASSIGN group if playing
+      else
+        event({type="cut",track=t,pos=1})
+        event({type="play",group=track[t].group})
+      end
     elseif x>5 and x<15 then
       -- FIXME: UPDATE PARAM, but for now:
       track[t].octave = x-10

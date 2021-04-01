@@ -5,7 +5,6 @@ state = {
 
 pages = {"track", "cut", "clip", "param"}
 
-
 group = {}
 
 for i=1,4 do
@@ -17,7 +16,7 @@ for i=1,4 do
     level = 1.0,
     pan = 0,
     mute = 1,
-    track = 1
+    track = i
   }
 end
 
@@ -25,14 +24,15 @@ track = {}
 
 for i=1,24 do
   track[i] = {
-    group = 1,
-    clip = 1,
+    group = ((i-1)%4)+1,
+    clip = ((i-1)%8)+1,
     mode = "normal", -- also "shift" (move loop) "hold" (slice)
     loop = true,
     loop_start = 1,
     loop_end = 16,
     loop_len = 16,
     steps = 16,
+    cuts = {},
     level = 1.0,
     pan = 0,
     --filter
@@ -51,11 +51,26 @@ clip = {}
 
 for i=1,16 do
   clip[i] = {
-    pos_start = (i-1)*2,
-    pos_end = i*2,
-    len = 2,
+    pos_start = (i-1)*4,
+    pos_end = i*4,
+    len = 4,
     ch = 1,
-    name = i
+    name = "clip"..i -- TODO leading zeroes
   }
 end
 
+
+function calc_cuts(t)
+  track[t].cuts = {}
+  local c = track[t].clip
+  local stepsize = clip[c].len / track[t].steps
+  for i=1,track[t].steps do
+    track[t].cuts[i] = clip[c].pos_start + (i-1)*stepsize
+  end
+end
+
+data = {}
+
+function data.init()
+  for i=1,24 do calc_cuts(i) end
+end
