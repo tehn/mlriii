@@ -163,6 +163,7 @@ g.key.clip = function(x,y,z)
     tr = y-2+w
     track[tr].clip = clip[x]
     sc.set_clip(track[tr].group)
+    calc_cuts(tr)
     g.dirty = true
     ui.dirty = true
   end
