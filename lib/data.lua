@@ -5,18 +5,16 @@ state = {
 
 pages = {"track", "cut", "clip", "param"}
 
-group = {}
+clip = {}
 
-for i=1,4 do
-  group[i] = {
-    play = false,
-    rec = false,
-    overdub = 0,
-    input = 1.0,
-    level = 1.0,
-    pan = 0,
-    mute = 1,
-    track = i
+for i=1,16 do
+  clip[i] = {
+    n = i,
+    pos_start = (i-1)*4,
+    pos_end = i*4,
+    len = 4,
+    ch = 1,
+    name = "clip"..i -- TODO leading zeroes
   }
 end
 
@@ -24,8 +22,9 @@ track = {}
 
 for i=1,24 do
   track[i] = {
+    n = i,
     group = ((i-1)%4)+1,
-    clip = ((i-1)%8)+1,
+    clip = clip[((i-1)%8)+1],
     mode = "normal", -- also "shift" (move loop) "hold" (slice)
     loop = true,
     loop_start = 1,
@@ -46,26 +45,28 @@ for i=1,24 do
   }
 end
 
+group = {}
 
-clip = {}
-
-for i=1,16 do
-  clip[i] = {
-    pos_start = (i-1)*4,
-    pos_end = i*4,
-    len = 4,
-    ch = 1,
-    name = "clip"..i -- TODO leading zeroes
+for i=1,4 do
+  group[i] = {
+    play = false,
+    rec = false,
+    overdub = 0,
+    input = 1.0,
+    level = 1.0,
+    pan = 0,
+    mute = 1,
+    track = track[i]
   }
 end
 
 
+
 function calc_cuts(t)
   track[t].cuts = {}
-  local c = track[t].clip
-  local stepsize = clip[c].len / track[t].steps
+  local stepsize = track[t].clip.len / track[t].steps
   for i=1,track[t].steps do
-    track[t].cuts[i] = clip[c].pos_start + (i-1)*stepsize
+    track[t].cuts[i] = track[t].clip.pos_start + (i-1)*stepsize
   end
 end
 

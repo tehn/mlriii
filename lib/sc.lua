@@ -25,30 +25,33 @@ function sc.init()
 end
 
 function sc.set_clip(g)
-  local c = track[group[g].track].clip
-  print(c.." SET CLIP")
-  print("  start: "..clip[c].pos_start)
-  print("  end:   "..clip[c].pos_end)
-  print("  ch:    "..clip[c].ch)
+  local c = group[g].track.clip
+  --print(c.n.." SET CLIP")
+  --print("  start: "..c.pos_start)
+  --print("  end:   "..c.pos_end)
+  --print("  ch:    "..c.ch)
 
   softcut.loop(g,1) -- FIXME play modes
-  softcut.loop_start(g,clip[c].pos_start)
-  softcut.loop_end(g,clip[c].pos_end)
-  softcut.buffer(g,clip[c].ch)
-  softcut.position(g,clip[c].pos_start)
+  softcut.loop_start(g,c.pos_start)
+  softcut.loop_end(g,c.pos_end)
+  softcut.buffer(g,c.ch)
+  softcut.position(g,c.pos_start)
 
-  local q = clip[c].len/track[group[g].track].steps
+  local q = c.len/group[g].track.steps
 
   local off = 0
-  while off < clip[c].pos_start do
+  while off < c.pos_start do
     off = off + q
   end
-  off = off - clip[c].pos_start
+  off = off - c.pos_start
 
   softcut.phase_quant(g,q)
   softcut.phase_offset(g,off)
 end
 
+function sc.set_clips()
+  for i=1,4 do sc.set_clip(i) end
+end
 
 function sc.set_level(g)
   print(g.." SET LEVELS")
@@ -79,6 +82,7 @@ function sc.set_play(g)
 end
 
 function sc.set_position(g,pos)
-  softcut.position(g,track[group[g].track].cuts[pos])
+  softcut.position(g,group[g].track.cuts[pos])
+  print("> set position",g,group[g].track.n,group[g].track.cuts[pos])
 end
 

@@ -1,6 +1,8 @@
 alt = false
 alt_lock = false
 
+keycount = 0
+
 gr = grid.connect()
 
 g = {
@@ -13,7 +15,7 @@ g = {
         g.dirty = false
         grid_redraw()
       end
-      clock.sync(1/60)
+      clock.sleep(1/60)
     end
   end,
   init = function() clock.run(g.update) end
@@ -30,15 +32,18 @@ function grid_redraw()
 end
 
 function gr.key(x,y,z)
+  keycount = keycount + z
   -- alt logic
   if x==16 and y==1 then
     if z==1 and alt==false then
+      keycount = 0
       alt = true
-      alt_lock = true
     elseif z==1 and alt_lock==true then
       alt = false
     elseif z==0 and alt_lock==false then
-      alt = false
+      if keycount == 0  then
+        alt_lock = true
+      else alt = false end
     end
     g.dirty = true
   elseif z==1 then alt_lock = false end
@@ -95,7 +100,7 @@ g.redraw.track = function()
     -- group
     for n=1,4 do gr:led(n,i+2,2) end -- background highlight
     gr:led(grp,i+2,alt and 10 or 5) -- selected group
-    if group[grp].track == i+w then
+    if group[grp].track.n == i+w then
       gr:led(grp,i+2,group[grp].play and 15 or 10) -- active track in group
     end
     -- octave + rev
@@ -115,8 +120,10 @@ g.key.track = function(x,y,z)
     if x<5 then
       if alt then
         print("ALT")
+        group[x].track = track[t]
         track[t].group = x
-        -- FIXME: DE-ASSIGN group if playing
+        -- FIXME: DE-ASSIGN group if playing ??
+        sc.set_clips()
       else
         event({type="cut",track=t,pos=1})
         event({type="play",group=track[t].group})
@@ -146,7 +153,7 @@ g.redraw.clip = function()
   local w = (state.window-1)*6
   for i=1,6 do
     local l = tr==i and 15 or 5
-    gr:led(track[i+w].clip,i+2,l)
+    gr:led(track[i+w].clip.n,i+2,l)
   end
 end
 
@@ -154,7 +161,8 @@ g.key.clip = function(x,y,z)
   local w = (state.window-1)*6
   if z==1 then
     tr = y-2+w
-    track[tr].clip = x
+    track[tr].clip = clip[x]
+    sc.set_clip(track[tr].group)
     g.dirty = true
     ui.dirty = true
   end

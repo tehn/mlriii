@@ -9,7 +9,7 @@ ui = {
         ui.dirty = false
         redraw()
       end
-      clock.sync(1/15)
+      clock.sleep(1/15)
     end
   end,
   init = function()
@@ -109,7 +109,7 @@ ui.redraw.clip = function()
 
   screen.line_width(1)
   for i=1,16 do
-    local l = track[tr].clip == i and 15 or 2
+    local l = track[tr].clip.n == i and 15 or 2
     local ch = clip[i].ch == 1 and 0 or 64
     screen.level(l)
     screen.move(clip[i].pos_start + ch,16.5+i)
@@ -120,19 +120,19 @@ ui.redraw.clip = function()
   screen.level(10)
   screen.font_size(8)
   screen.move(0,62)
-  screen.text("st "..clip[track[tr].clip].pos_start)
+  screen.text("st "..track[tr].clip.pos_start)
   screen.move(32,62)
-  screen.text("end "..clip[track[tr].clip].pos_end)
+  screen.text("end "..track[tr].clip.pos_end)
   screen.move(64,62)
-  screen.text("len "..clip[track[tr].clip].len)
+  screen.text("len "..track[tr].clip.len)
   screen.move(96,62)
-  screen.text("ch "..clip[track[tr].clip].ch)
+  screen.text("ch "..track[tr].clip.ch)
 end
 
 ui.key.clip = function(n,z)
   if n==3 and z==1 then
     print("SELECT")
-    fileselect.enter(paths.audio, function(n) clip_fileselect(n,track[tr].clip) end)
+    fileselect.enter(paths.audio, function(n) clip_fileselect(n,track[tr].clip.n) end)
   end
 end
 
@@ -149,8 +149,8 @@ function clip_fileselect(path, c)
       clip[c].name = path:match("[^/]*$") -- TODO: STRIP extension
       --update_rate(c)
       --params:set(c.."file",path)
-      for i=1,4 do -- refresh possibly active group-track-clip
-        sc.set_clip(i)
+      for i=1,4 do --refresh possibly active group-track-clip
+        if c == group[1].track.clip.n then sc.set_clip(i) end
       end
       for i=1,24 do -- recalc cuts for tracks using clip
         if track[i].clip == c then calc_cuts(i) end
