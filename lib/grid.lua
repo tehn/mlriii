@@ -74,11 +74,10 @@ grid_key_nav = function(x,y,z)
   if y==1 then
     if x<5 and z==1 then
       if group[x].play then
-        e = {type="stop",group=x}
+        event({type="stop",group=x})
       else
-        e = {type="play",group=x}
+        event({type="play",group=x})
       end
-      event(e)
     elseif x>8 and x<13 and z==1 then
       set_page(pages[x-8])
     end
@@ -130,10 +129,10 @@ g.key.track = function(x,y,z)
       end
     elseif x>5 and x<15 then
       -- FIXME: UPDATE PARAM, but for now:
-      track[t].octave = x-10
+      event({type="octave",track=t,octave=x-10})
     elseif x==16 then
       -- FIXME: update PARAM
-      track[t].rev = -track[t].rev
+      event({type="reverse",track=t})
     end
     g.dirty = true
     ui.dirty = true
