@@ -132,7 +132,7 @@ g.key.track = function(x,y,z)
       event({type="octave",track=t,octave=x-10})
     elseif x==16 then
       -- FIXME: update PARAM
-      event({type="reverse",track=t})
+      event({type="rev",track=t})
     end
     g.dirty = true
     ui.dirty = true
@@ -142,8 +142,28 @@ end
 
 -------- CUT
 
-g.redraw.cut = function() end
-g.key.cut = function(x,y,z) end
+g.redraw.cut = function()
+  local w = (state.window-1)*6
+  for i=1,6 do
+    local t = w+i
+    local y = i + 2
+    local x = track[t].pos_grid
+    local g = track[t].group
+    if group[g].play and group[g].track.n == t then
+      gr:led(x,y,15)
+    end
+  end
+end
+
+g.key.cut = function(x,y,z)
+  if z==1 then
+    local w = (state.window-1)*6
+    local t = y-2+w
+    local g = track[t].group
+    event({type="cut",track=t,pos=x})
+    event({type="play",group=g})
+  end
+end
 
 
 -------- CLIP

@@ -42,6 +42,7 @@ for i=1,24 do
     bpm_sync = false,
     bpm_mod = 1.0,
     rate_mod = 1.0,
+    pos_grid = 0
   }
 end
 
