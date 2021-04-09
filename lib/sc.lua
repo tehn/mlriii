@@ -4,7 +4,7 @@ function sc.init()
   params:set("softcut_level",1)
   params:set("cut_input_adc",1)
 
-  FADE = 0.1
+  FADE = 0.01
 
   for i=1,4 do
     softcut.enable(i,1)
@@ -17,7 +17,8 @@ function sc.init()
   end
 
   for i=1,4 do
-    sc.set_clip(i)
+    sc.off(i)
+    --sc.set_clip(i)
     sc.set_level(i)
     sc.set_rec(i)
     sc.set_play(i)
@@ -26,6 +27,14 @@ function sc.init()
   softcut.event_phase(phase)
   softcut.poll_start_phase()
 end
+
+function sc.off(g)
+    -- TODO: make sure rec isn't on!!
+    -- stop basically jumps to the "dead second" at the start, for clean cut in/out
+  softcut.loop_start(g,0)
+  softcut.loop_end(g,0.5)
+  softcut.position(g,0)
+end 
 
 --function sc.open_loop(g)
   --softcut.loop_start(g,0)
@@ -87,21 +96,23 @@ end
 
 function sc.set_play(g)
   if group[g].play then 
-    print(g.." PLAY")
+    --print(g.." PLAY")
+    -- TODO: FIXXXX this is irrelevant
     sc.set_rate(g)
     --softcut.play(g,1)
     --softcut.rec(g,1)
   else
-    print(g.." STOP")
-    softcut.rate(g,0)
+    --print(g.." STOP")
+    --softcut.rate(g,0)
     --softcut.play(g,0)
     --softcut.rec(g,0)
+    sc.off(g)
   end
 end
 
 function sc.cut_position(g,pos)
   softcut.position(g,group[g].track.cuts[pos])
-  print("> set position",g,group[g].track.n,group[g].track.cuts[pos])
+  --print("> set position",g,group[g].track.n,group[g].track.cuts[pos])
 end
 
 

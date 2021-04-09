@@ -150,7 +150,7 @@ function clip_fileselect(path, c)
       --update_rate(c)
       --params:set(c.."file",path)
       for i=1,4 do --refresh possibly active group-track-clip
-        if c == group[1].track.clip.n then sc.set_clip(i) end
+        if c == group[i].track.clip.n and group[i].play then sc.set_clip(i) end
       end
       for i=1,24 do -- recalc cuts for tracks using clip
         if track[i].clip == c then calc_cuts(i) end

@@ -1,5 +1,7 @@
 ef = {} -- event function
 
+-- ef.resume
+
 ef.play = function(data)
   local g = data.group
   group[g].play = true
@@ -15,7 +17,7 @@ end
 ef.cut = function(data)
   local t = data.track
   local g = track[t].group
-  if t ~= group[g].track.n then
+  if t ~= group[g].track.n or group[g].play == false then
     group[g].track = track[t]
     sc.set_clip(g)
     sc.set_level(g)
@@ -26,7 +28,7 @@ end
 ef.octave = function(data)
   track[data.track].octave = data.octave
   local g = track[data.track].group
-  if track[data.track].n == group[g].track.n then
+  if group[g].play == true and track[data.track].n == group[g].track.n then
     sc.set_rate(g)
   end
 end
@@ -34,7 +36,7 @@ end
 ef.rev = function(data)
   track[data.track].rev = -track[data.track].rev
   local g = track[data.track].group
-  if track[data.track].n == group[g].track.n then
+  if group[g].play == true and track[data.track].n == group[g].track.n then
     sc.set_rate(g)
   end
 end

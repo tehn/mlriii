@@ -76,7 +76,7 @@ grid_key_nav = function(x,y,z)
       if group[x].play then
         event({type="stop",group=x})
       else
-        event({type="play",group=x})
+        --event({type="play",group=x}) -- this should be RESUME
       end
     elseif x>8 and x<13 and z==1 then
       set_page(pages[x-8])
@@ -181,7 +181,9 @@ g.key.clip = function(x,y,z)
   if z==1 then
     tr = y-2+w
     track[tr].clip = clip[x]
-    sc.set_clip(track[tr].group)
+    if group[track[tr].group].play then
+      sc.set_clip(track[tr].group)
+    end
     calc_cuts(tr)
     g.dirty = true
     ui.dirty = true
