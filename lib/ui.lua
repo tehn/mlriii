@@ -61,6 +61,8 @@ ui.redraw.track = function()
   screen.text_right(tr)
 
   screen.font_size(8)
+  screen.move(0,54)
+  screen.text(track[tr].clip.name)
   screen.move(0,62)
   screen.text("group: "..track[tr].group)
   screen.move(48,62)

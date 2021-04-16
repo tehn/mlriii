@@ -1,6 +1,7 @@
 state = {
   page = "track",
   window = 1,
+  follow = false
 }
 
 pages = {"track", "cut", "clip", "param"}

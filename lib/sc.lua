@@ -98,7 +98,7 @@ function sc.set_play(g)
   if group[g].play then 
     --print(g.." PLAY")
     -- TODO: FIXXXX this is irrelevant
-    sc.set_rate(g)
+    --sc.set_rate(g)
     --softcut.play(g,1)
     --softcut.rec(g,1)
   else

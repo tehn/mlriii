@@ -76,7 +76,8 @@ grid_key_nav = function(x,y,z)
       if group[x].play then
         event({type="stop",group=x})
       else
-        --event({type="play",group=x}) -- this should be RESUME
+        --TODO: resume
+        --event({type="play",group=x}) 
       end
     elseif x>8 and x<13 and z==1 then
       set_page(pages[x-8])
@@ -102,6 +103,10 @@ g.redraw.track = function()
     if group[grp].track.n == i+w then
       gr:led(grp,i+2,group[grp].play and 15 or 10) -- active track in group
     end
+    -- show active edit track (ui)
+    if tr==i+w then
+      gr:led(5,i+2,state.follow and 7 or 4)
+    end
     -- octave + rev
     for n=6,14 do gr:led(n,i+2,2) end
     gr:led(10,i+2,0)
@@ -115,7 +120,7 @@ g.key.track = function(x,y,z)
   local w = (state.window-1)*6
   if z==1 then
     local t = y-2+w
-    tr = t
+    if state.follow then tr = t end
     if x<5 then
       if alt then
         print("ALT")
@@ -123,13 +128,19 @@ g.key.track = function(x,y,z)
         if prev ~= x then
           track[t].group = x
           if group[prev].track.n == t and group[prev].play then
+            -- bypass event system and stop group immediately
             sc.off(prev)
             group[prev].play = false
           end
         end
       else
         event({type="cut",track=t,pos=1})
-        event({type="play",group=track[t].group})
+      end
+    elseif x==5 then
+      if alt then
+        state.follow = not state.follow
+      else
+        tr = t
       end
     elseif x>5 and x<15 then
       -- FIXME: UPDATE PARAM, but for now:

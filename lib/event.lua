@@ -2,16 +2,16 @@ ef = {} -- event function
 
 -- ef.resume
 
+-- FIXME: unused
 ef.play = function(data)
   local g = data.group
   group[g].play = true
-  sc.set_play(g)
 end
 
 ef.stop = function(data)
   local g = data.group
   group[g].play = false
-  sc.set_play(g)
+  sc.off(g)
 end
 
 ef.cut = function(data)
@@ -21,6 +21,7 @@ ef.cut = function(data)
     group[g].track = track[t]
     sc.set_clip(g)
     sc.set_level(g)
+    group[g].play = true
   end
   sc.cut_position(g,data.pos)
 end

@@ -2,8 +2,75 @@
 
 ## TODO
 
-- CUT, show stopped play position if group START would resume there
-- params: sync with data
+FIXES/IDEAS/WHAT
+  - CUT, show stopped play position if group START would resume there
+    - RESUME needs a new softcut function to get current position (async) to store for future resume
+  - params: sync with data. which to add and where.
+  - FADES?
+  - alt+enc val edit = global? ie for levels, overdub/etc
+
+
+- TRACK
+  - PLAYING/RECORDING vis?
+  - screen ui PLAY display: values: overdub, level, pan, filter, detune, transpose, (echo) + below
+    - keys alternate assigned enc to above params 
+  - screen ui ALT edit menu: #steps, cut mode, bmp follow/map
+  
+- CUT
+  - grid key loop set
+  - cut mode: cut/clearloop, cut/moveloop, cut/stop(at end or loopend), momentary
+  - screen ui: waveform, playback position (obey follow). cut mode.
+    - level/pan/filter/detune/transpose same as track
+  - alt shapes:
+    - select/follow single tap (ie, quiet select)
+    - octave shift(1+,1-), reverse(1--,1++), stop(321)
+
+- CLIP
+  - file import: trim to clip size or full
+  - adjust clip positions/len/ch (with quantization?)
+  - default clip assignments (to track) 
+  - waveform (full and region)
+  - timeline position (single row per ch) full scale
+  - ALT
+    - save tape (whole buffer)
+    - clip export
+    - clear clip region (and whole tape?)
+    - reset all positions (len/separation settings? currently 2s/0sep. bar size? bpm?)
+    - move clip start to end of previous clip
+
+- REC
+  - rec enables/disables record
+  - alt+rec: rec single loop (ie, set length at second rec touch) --- hint: use Q
+  - overdub setting (preserve existing)
+
+- QUEUE: like recall but one-off. tap once, queue a bunch of whatever. tap again: does all at once.
+  - alt-queue: redo last (if stopped) or cancel (if rec'ing)
+
+- Q1/Q2: toggle between and off. if held then event-pressed, toggle off after. alt-q to config (while held) with e2/e3
+  - blink tempo divisions
+  - new events hit queue quantizer before pattern recorders
+    - might need an event origin var (live vs. pattern)
+
+- PATTERN
+  - pattern: tap to start, tap to stop (use q's)
+  - empty. alt-start = recall
+  - recording. alt-stop = cancel/clear
+  - data/stopped. alt-start = clear
+  - X some sort of arp-quantization? ie step input w/ playback rate modulation.
+  - X pattern modifications (?) ie quantize, modulate rate
+
+
+- PARAM
+  - show one track (for recall/patterns event recording)
+  - volume, pan, filter, transpose, detune, $echo
+  - slews?
+
+
+
+
+- BONUS
+  - echo
+  - transpose scale
 
 ---
 
@@ -44,7 +111,6 @@
 	stopped. alt-rec = rec single loop (ie, set length at second rec touch) --- hint: use Q
 - setting: play mode: cut-clear, cut-move, moment
 - setting: rec mode:
-- // stereo modes: 1+2, 3+4 (each optional) selector lights up 1+2 and 3+4
 
 ## modes (screens)
 
@@ -55,7 +121,6 @@ E2/E3 scroll/edit params
 - B cut
 - C clip
 - D param: level, pan, transpose, filter, echo
-	E2 change-param (K2/K3 also) E3 modify
 
 ## q
 
@@ -70,7 +135,7 @@ E2/E3 scroll/edit params
 
 ### cut mode
 
-- alt = shapes. octave up/down. rev. stop/start.
+- alt = shapes. octave up/down. rev.
 
 ### clip mode
 
