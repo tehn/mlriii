@@ -73,7 +73,7 @@ function sc.set_clips()
 end
 
 function sc.set_level(g)
-  --print(g.." SET LEVELS")
+  print(g.." SET LEVELS")
   softcut.level(g,group[g].level)
   softcut.pan(g,group[g].pan)
 end

@@ -97,8 +97,8 @@ g.redraw.track = function()
   for i=1,6 do 
     local grp = track[i+w].group
     -- group
-    for n=1,4 do gr:led(n,i+2,2) end -- background highlight
-    gr:led(grp,i+2,alt and 10 or 5) -- selected group
+    for n=1,4 do gr:led(n,i+2,alt and 3 or 2) end -- background highlight
+    gr:led(grp,i+2,5) -- selected group
     if group[grp].track.n == i+w then
       gr:led(grp,i+2,group[grp].play and 15 or 10) -- active track in group
     end
@@ -119,10 +119,14 @@ g.key.track = function(x,y,z)
     if x<5 then
       if alt then
         print("ALT")
-        group[x].track = track[t]
-        track[t].group = x
-        -- FIXME: DE-ASSIGN group if playing ??
-        sc.set_clips()
+        local prev = track[t].group
+        if prev ~= x then
+          track[t].group = x
+          if group[prev].track.n == t and group[prev].play then
+            sc.off(prev)
+            group[prev].play = false
+          end
+        end
       else
         event({type="cut",track=t,pos=1})
         event({type="play",group=track[t].group})
