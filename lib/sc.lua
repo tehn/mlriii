@@ -4,8 +4,6 @@ function sc.init()
   params:set("softcut_level",1)
   params:set("cut_input_adc",1)
 
-  FADE = 0.01
-
   for i=1,4 do
     softcut.enable(i,1)
     softcut.level_input_cut(1, i, 1.0)
@@ -89,15 +87,17 @@ function sc.set_rec(g)
 end
 
 function sc.set_rate(g)
-  local oct = math.pow(2,group[g].track.octave)
-  local r = oct * group[g].track.rev
+  local t = group[g].track
+  local oct = math.pow(2,t.octave)
+  local trans = math.pow(2,(t.transpose/12))
+  local r = oct * t.rev * (1+t.detune) * trans * t.bpm_mod
+  --print(g.." RATE: "..r)
   softcut.rate(g,r)
 end
 
 function sc.set_play(g)
   if group[g].play then 
     --print(g.." PLAY")
-    -- TODO: FIXXXX this is irrelevant
     --sc.set_rate(g)
     --softcut.play(g,1)
     --softcut.rec(g,1)

@@ -1,7 +1,13 @@
+FADE = 0.01
+
 state = {
   page = "track",
   window = 1,
-  follow = false
+  menusel = 1,
+  follow = false,
+  clipimport = "whole", -- vs. "part",
+  clipaction = "", -- "clear" or "load"
+  clipactiontimer = nil
 }
 
 pages = {"track", "cut", "clip", "param"}
@@ -9,13 +15,15 @@ pages = {"track", "cut", "clip", "param"}
 clip = {}
 
 for i=1,16 do
+  local l = 40
+  local s = 1+((i-1)%8)*l -- leave first second for fades, mod 8 to span two channels
   clip[i] = {
     n = i,
-    pos_start = 1+(i-1)*4, -- leave first second for fades
-    pos_end = 1+i*4,
-    len = 4,
-    ch = 1,
-    name = "clip"..i -- TODO leading zeroes
+    pos_start = s,
+    pos_end = s + l,
+    len = l,
+    ch = math.floor((i-1)/8)+1,
+    name = "clip-"..string.format("%02d",i)
   }
 end
 
@@ -25,7 +33,7 @@ for i=1,24 do
   track[i] = {
     n = i,
     group = ((i-1)%4)+1,
-    clip = clip[((i-1)%8)+1],
+    clip = clip[((i-1)%16)+1],
     mode = "normal", -- also "shift" (move loop) "hold" (slice)
     loop = true,
     loop_start = 1,
@@ -39,10 +47,10 @@ for i=1,24 do
     --echo
     octave = 0,
     transpose = 0,
+    detune = 0,
     rev = 1,
     bpm_sync = false,
     bpm_mod = 1.0,
-    rate_mod = 1.0,
     pos_grid = 0
   }
 end

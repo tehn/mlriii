@@ -8,6 +8,7 @@ FIXES/IDEAS/WHAT
   - params: sync with data. which to add and where.
   - FADES?
   - alt+enc val edit = global? ie for levels, overdub/etc
+  - mute (group) or use meta/pattern
 
 
 - TRACK
@@ -26,17 +27,13 @@ FIXES/IDEAS/WHAT
     - octave shift(1+,1-), reverse(1--,1++), stop(321)
 
 - CLIP
-  - file import: trim to clip size or full
   - adjust clip positions/len/ch (with quantization?)
-  - default clip assignments (to track) 
   - waveform (full and region)
-  - timeline position (single row per ch) full scale
   - ALT
-    - save tape (whole buffer)
-    - clip export
-    - clear clip region (and whole tape?)
+    - export clip/all
+    - clear clip/all
     - reset all positions (len/separation settings? currently 2s/0sep. bar size? bpm?)
-    - move clip start to end of previous clip
+    ? move clip start to end of previous clip
 
 - REC
   - rec enables/disables record
@@ -70,7 +67,7 @@ FIXES/IDEAS/WHAT
 
 - BONUS
   - echo
-  - transpose scale
+  - transpose scale: set as ratios (et is x/12)
 
 ---
 
