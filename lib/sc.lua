@@ -71,9 +71,10 @@ function sc.set_clips()
 end
 
 function sc.set_level(g)
-  print(g.." SET LEVELS")
-  softcut.level(g,group[g].level)
-  softcut.pan(g,group[g].pan)
+  --print(g.." SET LEVELS")
+  softcut.level(g,group[g].level*group[g].track.level)
+  --softcut.pan(g,group[g].pan) -- TODO if we want group pan, gotta do weird compensation/mix
+  softcut.pan(g,group[g].track.pan)
 end
 
 function sc.set_rec(g)
@@ -90,7 +91,7 @@ function sc.set_rate(g)
   local t = group[g].track
   local oct = math.pow(2,t.octave)
   local trans = math.pow(2,(t.transpose/12))
-  local r = oct * t.rev * (1+t.detune) * trans * t.bpm_mod
+  local r = oct * t.rev * (1+t.detune*0.1) * trans * t.bpm_mod
   --print(g.." RATE: "..r)
   softcut.rate(g,r)
 end

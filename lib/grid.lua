@@ -175,6 +175,7 @@ g.key.cut = function(x,y,z)
     local w = (state.window-1)*6
     local t = y-2+w
     local g = track[t].group
+    if state.follow then tr = t end
     event({type="cut",track=t,pos=x})
     event({type="play",group=g})
   end

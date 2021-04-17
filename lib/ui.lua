@@ -51,6 +51,40 @@ function enc(n,d)
   end
 end
 
+-------- META
+
+function meta_r()
+  screen.font_size(16)
+  screen.move(47,32)
+  screen.text_right(strdec2(track[tr][EMAP[state.emap[1]]]))
+  screen.move(107,32)
+  screen.text_right(strdec2(track[tr][EMAP[state.emap[2]]]))
+  screen.font_size(8)
+  screen.move(47,40)
+  screen.text_right(EMAP[state.emap[1]])
+  screen.move(107,40)
+  screen.text_right(EMAP[state.emap[2]])
+end
+
+function meta_k(n,z)
+  if n==2 and z==1 then
+    state.emap[1] = (state.emap[1] % 4)+1
+    ui.dirty = true
+  elseif n==3 and z==1 then
+    state.emap[2] = (state.emap[2] % 4)+1
+    ui.dirty = true
+  end
+end
+
+function meta_e(n,d)
+  if n==2 then
+    params:delta(tr..EMAP[state.emap[1]],d)
+  elseif n==3 then
+    params:delta(tr..EMAP[state.emap[2]],d)
+  end
+  ui.dirty = true
+end
+
 
 -------- TRACK
 
@@ -61,6 +95,8 @@ ui.redraw.track = function()
   screen.text("track")
   screen.move(127,12)
   screen.text_right(tr)
+
+  meta_r()
 
   screen.font_size(8)
   screen.move(0,54)
@@ -74,15 +110,15 @@ ui.redraw.track = function()
 end
 
 ui.key.track = function(n,z)
-  if n==3 and z==1 then
-    ui.dirty = true
-  end
+  if k1 then
+    -- TBD/menu
+  else meta_k(n,z) end
 end
 
 ui.enc.track = function(n,d)
-  if n==3 then
-    ui.dirty = true
-  end
+  if k1 then
+    -- TBD
+  else meta_e(n,d) end
 end
 
 
@@ -95,10 +131,13 @@ ui.redraw.cut = function()
   screen.text("cut")
   screen.move(127,12)
   screen.text_right(tr)
+
+  meta_r()
 end
 
-ui.key.cut = function(n,z) end
-ui.enc.cut = function(n,d) end
+ui.key.cut = function(n,z) meta_k(n,z) end
+
+ui.enc.cut = function(n,d) meta_e(n,d) end
 
 
 -------- CLIP
@@ -116,7 +155,7 @@ ui.redraw.clip = function()
     screen.level(10)
     screen.move(0,28)
     screen.text("clip import mode")
-    screen.move(128,28)
+    screen.move(127,28)
     screen.text_right(state.clipimport)
     -- position quantization: off, 1/32, 1/16, 1/8, 1/4, 1/2, 1 ---- REF TEMPO?
     -- export clip/all
@@ -141,7 +180,7 @@ ui.redraw.clip = function()
     screen.level(10)
     screen.move(0,54)
     screen.text(track[tr].clip.n .."/".. track[tr].clip.name)
-    screen.move(128,54)
+    screen.move(127,54)
     screen.text_right(string.upper(state.clipaction))
     screen.move(0,62)
     screen.text("S "..strdec2(track[tr].clip.pos_start))

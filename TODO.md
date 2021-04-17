@@ -2,6 +2,9 @@
 
 ## TODO
 
+NOW
+  - transpose should't be meta. lookup table. or just a NUM for indexes? scale table.
+
 FIXES/IDEAS/WHAT
   - CUT, show stopped play position if group START would resume there
     - RESUME needs a new softcut function to get current position (async) to store for future resume
@@ -13,15 +16,12 @@ FIXES/IDEAS/WHAT
 
 - TRACK
   - PLAYING/RECORDING vis?
-  - screen ui PLAY display: values: overdub, level, pan, filter, detune, transpose, (echo) + below
-    - keys alternate assigned enc to above params 
-  - screen ui ALT edit menu: #steps, cut mode, bmp follow/map
+  - screen ui ALT edit menu: overdub (group), #steps, cut mode, bmp follow/map
   
 - CUT
   - grid key loop set
   - cut mode: cut/clearloop, cut/moveloop, cut/stop(at end or loopend), momentary
   - screen ui: waveform, playback position (obey follow). cut mode.
-    - level/pan/filter/detune/transpose same as track
   - alt shapes:
     - select/follow single tap (ie, quiet select)
     - octave shift(1+,1-), reverse(1--,1++), stop(321)

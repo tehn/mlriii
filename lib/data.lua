@@ -1,8 +1,11 @@
 FADE = 0.01
 
+EMAP = {"level", "pan", "detune", "transpose"}
+
 state = {
   page = "track",
   window = 1,
+  emap = {1,2},
   menusel = 1,
   follow = false,
   clipimport = "whole", -- vs. "part",
@@ -64,7 +67,7 @@ for i=1,4 do
     overdub = 0,
     input = 1.0,
     level = 1.0,
-    pan = 0,
+    --pan = 0,
     mute = 1,
     track = track[i]
   }
@@ -80,8 +83,59 @@ function calc_cuts(t)
   end
 end
 
+
+function set_level(i,x)
+  track[i].level = x
+  local g = group[track[i].group]
+  if g.track.n == i and g.play then
+    sc.set_level(i)
+  end
+end
+
+function set_pan(i,x)
+  track[i].pan = x
+  local g = group[track[i].group]
+  if g.track.n == i and g.play then
+    sc.set_level(i)
+  end
+end
+
+function set_detune(i,x)
+  track[i].detune = x
+  local g = group[track[i].group]
+  if g.track.n == i and g.play then
+    sc.set_rate(i)
+  end
+end
+
+function set_transpose(i,x)
+  track[i].transpose = x
+  local g = group[track[i].group]
+  if g.track.n == i and g.play then
+    sc.set_rate(i)
+  end
+end
+
+
+
 data = {}
 
 function data.init()
   for i=1,24 do calc_cuts(i) end
+
+  for i=1,24 do
+    params:add_group(i.."track",2)
+    params:add_control(i.."level", i.."level", 
+      controlspec.new(0, 1, 'lin', 0, 1, ""))
+    params:set_action(i.."level", function(x) set_level(i,x) end)
+    params:add_control(i.."pan", i.."pan", 
+      controlspec.new(-1, 1, 'lin', 0, 0, ""))
+    params:set_action(i.."pan", function(x) set_pan(i,x) end)
+    params:add_control(i.."detune", i.."detune", 
+      controlspec.new(-1, 1, 'lin', 0, 0, ""))
+    params:set_action(i.."detune", function(x) set_detune(i,x) end)
+    params:add_control(i.."transpose", i.."transpose", 
+      controlspec.new(-1, 1, 'lin', 0, 0, ""))
+    params:set_action(i.."transpose", function(x) set_transpose(i,x) end)
+  end
 end
