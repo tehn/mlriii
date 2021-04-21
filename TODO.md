@@ -3,7 +3,8 @@
 ## TODO
 
 NOW
-  - transpose should't be meta. lookup table. or just a NUM for indexes? scale table.
+  - transpose param needs to be OPTION
+    - display correctly ie re-build options based on trans_n and trans_d tables (also put in params)
 
 FIXES/IDEAS/WHAT
   - CUT, show stopped play position if group START would resume there

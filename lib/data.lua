@@ -2,6 +2,9 @@ FADE = 0.01
 
 EMAP = {"level", "pan", "detune", "transpose"}
 
+trans_n = {-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10,11}
+trans_d = {12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12}
+
 state = {
   page = "track",
   window = 1,
@@ -49,12 +52,12 @@ for i=1,24 do
     --filter
     --echo
     octave = 0,
-    transpose = 0,
+    transpose = 5,
+    transpose_ratio = 0, -- this is just pre-computed from the table
     detune = 0,
     rev = 1,
     bpm_sync = false,
     bpm_mod = 1.0,
-    pos_grid = 0
   }
 end
 
@@ -69,7 +72,9 @@ for i=1,4 do
     level = 1.0,
     --pan = 0,
     mute = 1,
-    track = track[i]
+    track = track[i],
+    position = 0,
+    pos_grid = 0
   }
 end
 
@@ -110,6 +115,7 @@ end
 
 function set_transpose(i,x)
   track[i].transpose = x
+  track[i].transpose_ratio = trans_n[x] / trans_d[x]
   local g = group[track[i].group]
   if g.track.n == i and g.play then
     sc.set_rate(i)
@@ -134,8 +140,7 @@ function data.init()
     params:add_control(i.."detune", i.."detune", 
       controlspec.new(-1, 1, 'lin', 0, 0, ""))
     params:set_action(i.."detune", function(x) set_detune(i,x) end)
-    params:add_control(i.."transpose", i.."transpose", 
-      controlspec.new(-1, 1, 'lin', 0, 0, ""))
+    params:add_number(i.."transpose", i.."transpose", 1,16, 5)
     params:set_action(i.."transpose", function(x) set_transpose(i,x) end)
   end
 end

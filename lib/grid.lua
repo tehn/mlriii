@@ -76,8 +76,7 @@ grid_key_nav = function(x,y,z)
       if group[x].play then
         event({type="stop",group=x})
       else
-        --TODO: resume
-        --event({type="play",group=x}) 
+        event({type="resume",group=x}) 
       end
     elseif x>8 and x<13 and z==1 then
       set_page(pages[x-8])
@@ -162,8 +161,8 @@ g.redraw.cut = function()
   for i=1,6 do
     local t = w+i
     local y = i + 2
-    local x = track[t].pos_grid
     local g = track[t].group
+    local x = group[g].pos_grid
     if group[g].play and group[g].track.n == t then
       gr:led(x,y,15)
     end
@@ -177,7 +176,6 @@ g.key.cut = function(x,y,z)
     local g = track[t].group
     if state.follow then tr = t end
     event({type="cut",track=t,pos=x})
-    event({type="play",group=g})
   end
 end
 

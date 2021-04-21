@@ -24,6 +24,8 @@ function sc.init()
 
   softcut.event_phase(phase)
   softcut.poll_start_phase()
+
+  softcut.event_position(report_position)
 end
 
 function sc.off(g)
@@ -90,9 +92,9 @@ end
 function sc.set_rate(g)
   local t = group[g].track
   local oct = math.pow(2,t.octave)
-  local trans = math.pow(2,(t.transpose/12))
+  local trans = math.pow(2,(t.transpose_ratio))
   local r = oct * t.rev * (1+t.detune*0.1) * trans * t.bpm_mod
-  --print(g.." RATE: "..r)
+  print(g.." RATE: ",r,oct,trans)
   softcut.rate(g,r)
 end
 
@@ -116,6 +118,10 @@ function sc.cut_position(g,pos)
   --print("> set position",g,group[g].track.n,group[g].track.cuts[pos])
 end
 
+function sc.resume_position(g)
+  softcut.position(g,group[g].position)
+end
+
 
 
 -- phase poll callback
@@ -123,8 +129,15 @@ function phase(n, x)
   local pp = ((x - group[n].track.clip.pos_start) / group[n].track.clip.len)-- * 16 --TODO 16=div
   --if n==1 then print("> ",x,pp,math.floor(pp*16)) end
   x = math.floor(pp * 16)+1
-  if x ~= group[n].track.pos_grid then
-    group[n].track.pos_grid = x
+  if x ~= group[n].pos_grid then
+    group[n].pos_grid = x
     if state.page == "cut" then g.dirty = true end
   end
 end
+
+-- position query callback
+report_position = function(i,p)
+  print(i,p)
+  group[i].position = p
+end
+

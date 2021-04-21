@@ -68,10 +68,10 @@ end
 
 function meta_k(n,z)
   if n==2 and z==1 then
-    state.emap[1] = (state.emap[1] % 4)+1
+    state.emap[1] = (state.emap[1] % #EMAP)+1
     ui.dirty = true
   elseif n==3 and z==1 then
-    state.emap[2] = (state.emap[2] % 4)+1
+    state.emap[2] = (state.emap[2] % #EMAP)+1
     ui.dirty = true
   end
 end
