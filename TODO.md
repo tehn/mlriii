@@ -3,20 +3,21 @@
 ## TODO
 
 NOW
-  - transpose param needs to be OPTION
-    - display correctly ie re-build options based on trans_n and trans_d tables (also put in params)
 
 FIXES/IDEAS/WHAT
+  - transpose param needs to be OPTION
+    - display correctly ie re-build options based on trans_n and trans_d tables (also put in params)
   - CUT, show stopped play position if group START would resume there
     - RESUME needs a new softcut function to get current position (async) to store for future resume
-  - params: sync with data. which to add and where.
   - FADES?
   - alt+enc val edit = global? ie for levels, overdub/etc
-  - mute (group) or use meta/pattern
-
+  - mute (group) (alt-play/stop?)
+  - alt-E1 assignable?
+  - UI: show 6 rows. grp, oct/rev, clipname
+  - adc input param levels
 
 - TRACK
-  - PLAYING/RECORDING vis?
+  - PLAYING/RECORDING ui vis?
   - screen ui ALT edit menu: overdub (group), #steps, cut mode, bmp follow/map
   
 - CUT
@@ -37,7 +38,6 @@ FIXES/IDEAS/WHAT
     ? move clip start to end of previous clip
 
 - REC
-  - rec enables/disables record
   - alt+rec: rec single loop (ie, set length at second rec touch) --- hint: use Q
   - overdub setting (preserve existing)
 

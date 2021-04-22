@@ -49,6 +49,12 @@ ef.rev = function(data)
   end
 end
 
+ef.rec = function(data)
+  local g = data.group
+  group[g].rec = not group[g].rec
+  sc.set_play(g)
+end
+
 function event(e)
   ef[e.type](e)
 

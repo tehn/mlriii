@@ -9,16 +9,16 @@ function sc.init()
     softcut.level_input_cut(1, i, 1.0)
     softcut.level_input_cut(2, i, 1.0)
     softcut.fade_time(i,FADE)
-    softcut.level_slew_time(i,0.1)
+    softcut.level_slew_time(i,0.1) -- FIXME could be too big
     softcut.rate_slew_time(i,0)
     softcut.play(i,1)
+    softcut.rec(i,1)
   end
 
   for i=1,4 do
     sc.off(i)
     --sc.set_clip(i)
     sc.set_level(i)
-    sc.set_rec(i)
     sc.set_play(i)
   end
 
@@ -80,10 +80,12 @@ function sc.set_level(g)
 end
 
 function sc.set_rec(g)
-  if group[g].rec then
+  if group[g].rec and group[g].play then
+    print("REC",group[g].overdub,group[g].input)
     softcut.pre_level(g,group[g].overdub)
     softcut.rec_level(g,group[g].input)
   else
+    print("PLAY rec levels")
     softcut.pre_level(g,1)
     softcut.rec_level(g,0)
   end
@@ -111,6 +113,7 @@ function sc.set_play(g)
     --softcut.rec(g,0)
     sc.off(g)
   end
+  sc.set_rec(g)
 end
 
 function sc.cut_position(g,pos)

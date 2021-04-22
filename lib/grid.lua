@@ -63,6 +63,7 @@ grid_redraw_nav = function()
 
   for i=1,4 do
     gr:led(i,1,group[i].play and 10 or 0)
+    gr:led(i+4,1,group[i].rec and 10 or 0)
   end
 
   gr:led(8+page_lookup[state.page],1,15)
@@ -77,6 +78,11 @@ grid_key_nav = function(x,y,z)
         event({type="stop",group=x})
       else
         event({type="resume",group=x}) 
+      end
+    elseif x>4 and x<9 and z==1 then
+      if alt then
+      else
+        event({type="rec",group=x-4})
       end
     elseif x>8 and x<13 and z==1 then
       set_page(pages[x-8])

@@ -67,7 +67,7 @@ for i=1,4 do
   group[i] = {
     play = false,
     rec = false,
-    overdub = 0,
+    overdub = 0.5,
     input = 1.0,
     level = 1.0,
     --pan = 0,
@@ -130,7 +130,7 @@ function data.init()
   for i=1,24 do calc_cuts(i) end
 
   for i=1,24 do
-    params:add_group(i.."track",2)
+    params:add_group(i.."track",4)
     params:add_control(i.."level", i.."level", 
       controlspec.new(0, 1, 'lin', 0, 1, ""))
     params:set_action(i.."level", function(x) set_level(i,x) end)
