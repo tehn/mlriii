@@ -6,8 +6,8 @@ function sc.init()
 
   for i=1,4 do
     softcut.enable(i,1)
-    softcut.level_input_cut(1, i, 1.0)
-    softcut.level_input_cut(2, i, 1.0)
+    softcut.level_input_cut(1, i, 0.7)
+    softcut.level_input_cut(2, i, 0.7)
     softcut.fade_time(i,FADE)
     softcut.level_slew_time(i,0.1) -- FIXME could be too big
     softcut.rate_slew_time(i,0)
@@ -18,8 +18,8 @@ function sc.init()
   for i=1,4 do
     sc.off(i)
     --sc.set_clip(i)
-    sc.set_level(i)
-    sc.set_play(i)
+    --sc.set_level(i)
+    --sc.set_play(i)
   end
 
   softcut.event_phase(phase)
@@ -31,6 +31,8 @@ end
 function sc.off(g)
     -- TODO: make sure rec isn't on!!
     -- stop basically jumps to the "dead second" at the start, for clean cut in/out
+  softcut.rec_level(g,0)
+  softcut.level(g,0)
   softcut.loop_start(g,0)
   softcut.loop_end(g,0.5)
   softcut.position(g,0)
@@ -43,9 +45,9 @@ end
 
 function sc.set_clip(g)
   local c = group[g].track.clip
-  print(c.n.." SET CLIP")
-  print("  start: "..c.pos_start)
-  print("  end:   "..c.pos_end)
+  --print(c.n.." SET CLIP")
+  --print("  start: "..c.pos_start)
+  --print("  end:   "..c.pos_end)
   --print("  ch:    "..c.ch)
 
   softcut.loop(g,1) -- FIXME play modes
@@ -77,15 +79,17 @@ function sc.set_level(g)
   softcut.level(g,group[g].level*group[g].track.level)
   --softcut.pan(g,group[g].pan) -- TODO if we want group pan, gotta do weird compensation/mix
   softcut.pan(g,group[g].track.pan)
+  sc.set_rec(g)
 end
 
 function sc.set_rec(g)
+  --print("set_rec",group[g].rec,group[g].play)
   if group[g].rec and group[g].play then
-    print("REC",group[g].overdub,group[g].input)
+    --print("set_rec REC",group[g].overdub,group[g].input)
     softcut.pre_level(g,group[g].overdub)
     softcut.rec_level(g,group[g].input)
   else
-    print("PLAY rec levels")
+    --print("set_rec PLAY")
     softcut.pre_level(g,1)
     softcut.rec_level(g,0)
   end
@@ -96,7 +100,7 @@ function sc.set_rate(g)
   local oct = math.pow(2,t.octave)
   local trans = math.pow(2,(t.transpose_ratio))
   local r = oct * t.rev * (1+t.detune*0.1) * trans * t.bpm_mod
-  print(g.." RATE: ",r,oct,trans)
+  --print(g.." RATE: ",r,oct,trans)
   softcut.rate(g,r)
 end
 
@@ -106,6 +110,7 @@ function sc.set_play(g)
     --sc.set_rate(g)
     --softcut.play(g,1)
     --softcut.rec(g,1)
+    sc.set_rec(g)
   else
     --print(g.." STOP")
     --softcut.rate(g,0)
@@ -113,7 +118,6 @@ function sc.set_play(g)
     --softcut.rec(g,0)
     sc.off(g)
   end
-  sc.set_rec(g)
 end
 
 function sc.cut_position(g,pos)
@@ -124,6 +128,7 @@ end
 function sc.resume_position(g)
   softcut.position(g,group[g].position)
 end
+
 
 
 
@@ -140,7 +145,17 @@ end
 
 -- position query callback
 report_position = function(i,p)
-  print(i,p)
+  --print("report_position",i,p)
   group[i].position = p
+  if group[i].resize_clip then
+    local c = clip[group[i].resize_clip]
+    group[i].resize_clip = nil
+    c.pos_end = p
+    c.len = c.pos_end - c.pos_start
+    sc.set_clip(i)
+    calc_cuts(i)
+    group[i].rec = false
+    sc.set_rec(i)
+  end
 end
 

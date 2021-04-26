@@ -5,10 +5,10 @@ ef.resume = function(data)
   --local t = track[t].group
   --if t ~= group[g].track.n or group[g].play == false then
     ----group[g].track = track[t]
+    group[g].play = true
     sc.set_clip(g)
     sc.set_rate(g)
     sc.set_level(g)
-    group[g].play = true
   --end
   sc.resume_position(g)
 end
@@ -25,10 +25,10 @@ ef.cut = function(data)
   local g = track[t].group
   if t ~= group[g].track.n or group[g].play == false then
     group[g].track = track[t]
+    group[g].play = true
     sc.set_clip(g)
     sc.set_level(g)
     sc.set_rate(g)
-    group[g].play = true
   end
   sc.cut_position(g,data.pos)
 end
@@ -54,6 +54,13 @@ ef.rec = function(data)
   group[g].rec = not group[g].rec
   sc.set_play(g)
 end
+
+ef.resize = function(data)
+  local g = data.group
+  group[g].resize_clip = group[g].track.clip.n
+  softcut.query_position(g)
+end
+  
 
 function event(e)
   ef[e.type](e)

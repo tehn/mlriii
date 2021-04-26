@@ -63,7 +63,7 @@ grid_redraw_nav = function()
 
   for i=1,4 do
     gr:led(i,1,group[i].play and 10 or 0)
-    gr:led(i+4,1,group[i].rec and 10 or 0)
+    gr:led(i+4,1,group[i].rec and (group[i].play and 10 or 3) or 0)
   end
 
   gr:led(8+page_lookup[state.page],1,15)
@@ -80,9 +80,15 @@ grid_key_nav = function(x,y,z)
         event({type="resume",group=x}) 
       end
     elseif x>4 and x<9 and z==1 then
+      local g = x-4
       if alt then
+        if group[g].rec and group[g].play then
+          event({type="resize",group=g}) 
+        elseif not group[g].rec and not group[g].play then
+          restore_clip(group[g].track.clip.n)
+        end
       else
-        event({type="rec",group=x-4})
+        event({type="rec",group=g})
       end
     elseif x>8 and x<13 and z==1 then
       set_page(pages[x-8])

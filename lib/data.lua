@@ -88,6 +88,17 @@ function calc_cuts(t)
   end
 end
 
+function restore_clip(c)
+  clip[c].len = 40
+  clip[c].pos_end = clip[c].pos_start + 40
+  for i=1,4 do --refresh possibly active group-track-clip
+    if c == group[i].track.clip.n and group[i].play then sc.set_clip(i) end
+  end
+  for i=1,24 do -- recalc cuts for tracks using clip
+    if track[i].clip.n == c then calc_cuts(i) end
+  end
+end
+
 
 function set_level(i,x)
   track[i].level = x
