@@ -3,12 +3,12 @@
 ## TODO
 
 NOW
+  - VOLUME CURVES (controlspec?)
 
 FIXES/IDEAS/WHAT
   - transpose param needs to be OPTION
     - display correctly ie re-build options based on trans_n and trans_d tables (also put in params)
   - CUT, show stopped play position if group START would resume there
-    - RESUME needs a new softcut function to get current position (async) to store for future resume
   - FADES?
   - alt+enc val edit = global? ie for levels, overdub/etc
   - mute (group) (alt-play/stop?)
@@ -17,7 +17,6 @@ FIXES/IDEAS/WHAT
   - adc input param levels
 
 - TRACK
-  - PLAYING/RECORDING ui vis?
   - screen ui ALT edit menu: overdub (group), #steps, cut mode, bmp follow/map
   
 - CUT
@@ -38,7 +37,6 @@ FIXES/IDEAS/WHAT
     ? move clip start to end of previous clip
 
 - REC
-  - alt+rec: rec single loop (ie, set length at second rec touch) --- hint: use Q
   - overdub setting (preserve existing)
 
 - QUEUE: like recall but one-off. tap once, queue a bunch of whatever. tap again: does all at once.
@@ -54,14 +52,14 @@ FIXES/IDEAS/WHAT
   - empty. alt-start = recall
   - recording. alt-stop = cancel/clear
   - data/stopped. alt-start = clear
-  - X some sort of arp-quantization? ie step input w/ playback rate modulation.
-  - X pattern modifications (?) ie quantize, modulate rate
 
 
 - PARAM
   - show one track (for recall/patterns event recording)
   - volume, pan, filter, transpose, detune, $echo
   - slews?
+  - UI: text labels, current vals
+
 
 
 

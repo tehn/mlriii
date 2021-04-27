@@ -219,5 +219,21 @@ end
 
 -------- PARAM
 
-g.redraw.param = function() end
-g.key.param = function(x,y,z) end
+g.redraw.param = function()
+  local w = (state.window-1)*6
+  if tr>w and tr<w+7 then
+    gr:led(1,tr-w+2,5)
+  end
+  gr:led(math.floor(14*params:get(tr.."level")+2),3,15)
+end
+
+g.key.param = function(x,y,z)
+  local w = (state.window-1)*6
+  if x==1 and z==1 then
+    tr = y-2+w
+  elseif x>1 and y==3 and z==1 then
+    params:set(tr.."level",(x-2)/14)
+  end
+  g.dirty = true;
+  ui.dirty = true;
+end

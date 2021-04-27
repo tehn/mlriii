@@ -36,9 +36,10 @@ end
 track = {}
 
 for i=1,24 do
+  local g = {1,2,3,3,4,4, 1,1,1,2,3,4, 1,1,1,2,2,2, 1,1,1,1,1,1}
   track[i] = {
     n = i,
-    group = ((i-1)%4)+1,
+    group = g[i],
     clip = clip[((i-1)%16)+1],
     mode = "normal", -- also "shift" (move loop) "hold" (slice)
     loop = true,
@@ -64,6 +65,7 @@ end
 group = {}
 
 for i=1,4 do
+  local t = {1,2,3,5}
   group[i] = {
     play = false,
     rec = false,
@@ -72,7 +74,7 @@ for i=1,4 do
     level = 1.0,
     --pan = 0,
     mute = 1,
-    track = track[i],
+    track = track[t[i]],
     position = 0,
     pos_grid = 0
   }

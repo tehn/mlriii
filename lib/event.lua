@@ -49,6 +49,10 @@ ef.rev = function(data)
   end
 end
 
+ef.level = function(data)
+  params:set(data.track.."level",data.value)
+end
+
 ef.rec = function(data)
   local g = data.group
   group[g].rec = not group[g].rec

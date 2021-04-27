@@ -89,12 +89,14 @@ end
 -------- TRACK
 
 ui.redraw.track = function()
+  local g = track[tr].group
+  local stat = (group[g].rec and "+" or "") .. (group[g].play and ">" or "")
   screen.level(15)
   screen.move(0,12)
   screen.font_size(16)
   screen.text("track")
   screen.move(127,12)
-  screen.text_right(tr)
+  screen.text_right(stat..tr)
 
   meta_r()
 
