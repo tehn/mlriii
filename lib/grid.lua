@@ -224,15 +224,32 @@ g.redraw.param = function()
   if tr>w and tr<w+7 then
     gr:led(1,tr-w+2,5)
   end
-  gr:led(math.floor(14*params:get(tr.."level")+2),3,15)
+  local level = 14*params:get(tr.."level")+1
+  for i=2,level do gr:led(i,3,2) end
+  gr:led(math.floor(1+level),3,15)
+  gr:led(9,4,3)
+  gr:led(math.floor(7*params:get(tr.."pan")+9),4,15)
+
+  gr:led(9,7,3)
+  gr:led(math.floor(7*params:get(tr.."detune")+9),7,15)
+
+  gr:led(params:get(tr.."transpose")+1,8,15)
 end
 
 g.key.param = function(x,y,z)
   local w = (state.window-1)*6
-  if x==1 and z==1 then
-    tr = y-2+w
-  elseif x>1 and y==3 and z==1 then
-    params:set(tr.."level",(x-2)/14)
+  if z==1 then
+    if x==1 then
+      tr = y-2+w
+    elseif x>1 and y==3 then
+      params:set(tr.."level",(x-2)/14)
+    elseif x>1 and y==4 then
+      params:set(tr.."pan",(x-9)/7)
+    elseif x>1 and y==7 then
+      params:set(tr.."detune",(x-9)/7)
+    elseif x>1 and y==8 then
+      params:set(tr.."transpose",x-1)
+    end
   end
   g.dirty = true;
   ui.dirty = true;

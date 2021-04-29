@@ -6,6 +6,7 @@ NOW
   - VOLUME CURVES (controlspec?)
 
 FIXES/IDEAS/WHAT
+  - follow select on track page weird if ALT is locked on
   - transpose param needs to be OPTION
     - display correctly ie re-build options based on trans_n and trans_d tables (also put in params)
   - CUT, show stopped play position if group START would resume there

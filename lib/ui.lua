@@ -21,6 +21,8 @@ ui = {
 k1 = false
 tr = 1
 
+L3 = 24; L4 = 32; L5 = 40; L6 = 48; L7 = 56; L8 = 64;
+
 
 function redraw()
   screen.clear()
@@ -282,6 +284,27 @@ ui.redraw.param = function()
   screen.text("param")
   screen.move(127,12)
   screen.text_right(tr)
+
+  screen.font_size(8)
+  screen.level(10)
+  screen.move(0,L3)
+  screen.text("level")
+  screen.move(127,L3)
+  screen.text_right(params:string(tr.."level"))
+  screen.move(0,L4)
+  screen.text("pan")
+  screen.move(127,L4)
+  screen.text_right(params:string(tr.."pan"))
+
+  screen.move(0,L7)
+  screen.text("detune")
+  screen.move(127,L7)
+  screen.text_right(params:string(tr.."detune"))
+  screen.move(0,L8)
+  screen.text("transpose")
+  screen.move(127,L8)
+  screen.text_right(params:string(tr.."transpose"))
+
 end
 
 ui.key.param = function(n,z) end
