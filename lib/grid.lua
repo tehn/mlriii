@@ -56,17 +56,16 @@ end
 
 -------- nav (global)
 
-local page_lookup = { track=1, cut=2, clip=3, param=4 }
-
 grid_redraw_nav = function()
   if alt then gr:led(16,1,15) end
 
   for i=1,4 do
     gr:led(i,1,group[i].play and 10 or 0)
-    gr:led(i+4,1,group[i].rec and (group[i].play and 10 or 3) or 0)
+    gr:led(i,2,group[i].rec and (group[i].play and 10 or 3) or 0)
   end
 
-  gr:led(8+page_lookup[state.page],1,15)
+  for i=5,12 do gr:led(i,1,3) end
+  gr:led(4+page_lookup[state.page],1,15)
 
   gr:led(12+state.window,2,15)
 end
@@ -79,22 +78,21 @@ grid_key_nav = function(x,y,z)
       else
         event({type="resume",group=x}) 
       end
-    elseif x>4 and x<9 and z==1 then
-      local g = x-4
-      if alt then
-        if group[g].rec and group[g].play then
-          event({type="resize",group=g}) 
-        elseif not group[g].rec and not group[g].play then
-          restore_clip(group[g].track.clip.n)
-        end
-      else
-        event({type="rec",group=g})
-      end
-    elseif x>8 and x<13 and z==1 then
-      set_page(pages[x-8])
+    elseif x>4 and x<13 and z==1 then
+      set_page(pages[x-4])
     end
   elseif y==2 then
-    if x>12 and z==1 then
+    if x<5 and z==1 then
+      if alt then
+        if group[x].rec and group[x].play then
+          event({type="resize",group=x}) 
+        elseif not group[x].rec and not group[x].play then
+          restore_clip(group[x].track.clip.n)
+        end
+      else
+        event({type="rec",group=x})
+      end
+    elseif x>12 and z==1 then
       set_window(x-12)
     end
   end
@@ -166,6 +164,31 @@ g.key.track = function(x,y,z)
 end
 
 
+-------- CLIP
+
+g.redraw.clip = function()
+  local w = (state.window-1)*6
+  for i=1,6 do
+    local l = tr==i and 15 or 5
+    gr:led(track[i+w].clip.n,i+2,l)
+  end
+end
+
+g.key.clip = function(x,y,z)
+  local w = (state.window-1)*6
+  if z==1 then
+    tr = y-2+w
+    track[tr].clip = clip[x]
+    if group[track[tr].group].play then
+      sc.set_clip(track[tr].group)
+    end
+    calc_cuts(tr)
+    g.dirty = true
+    ui.dirty = true
+  end
+end
+
+
 -------- CUT
 
 g.redraw.cut = function()
@@ -192,34 +215,90 @@ g.key.cut = function(x,y,z)
 end
 
 
--------- CLIP
+-------- LEVEL
 
-g.redraw.clip = function()
+g.redraw.level = function()
   local w = (state.window-1)*6
   for i=1,6 do
-    local l = tr==i and 15 or 5
-    gr:led(track[i+w].clip.n,i+2,l)
+    local level = math.floor(14*params:get((i+w).."level")+1)
+    for n=2,level do gr:led(n,i+2,2) end
+    gr:led(1+level,i+2,15)
   end
 end
 
-g.key.clip = function(x,y,z)
+g.key.level = function(x,y,z)
   local w = (state.window-1)*6
   if z==1 then
-    tr = y-2+w
-    track[tr].clip = clip[x]
-    if group[track[tr].group].play then
-      sc.set_clip(track[tr].group)
-    end
-    calc_cuts(tr)
-    g.dirty = true
-    ui.dirty = true
+    params:set((y-2+w).."level",(x-2)/14)
   end
+  g.dirty = true;
+  ui.dirty = true;
 end
 
 
--------- PARAM
+-------- PAN
 
-g.redraw.param = function()
+g.redraw.pan = function()
+  local w = (state.window-1)*6
+  for i=1,6 do
+    gr:led(9,i+2,3)
+    gr:led(math.floor(7*params:get((i+w).."pan")+9),i+2,15)
+  end
+end
+
+g.key.pan = function(x,y,z)
+  local w = (state.window-1)*6
+  if z==1 then
+    params:set((y-2+w).."pan",(x-9)/7)
+  end
+  g.dirty = true;
+  ui.dirty = true;
+end
+
+
+-------- DETUNE
+
+g.redraw.detune = function()
+  local w = (state.window-1)*6
+  for i=1,6 do
+    gr:led(9,i+2,3)
+    gr:led(math.floor(7*params:get((i+w).."detune")+9),i+2,15)
+  end
+end
+
+g.key.detune = function(x,y,z)
+  local w = (state.window-1)*6
+  if z==1 then
+    params:set((y-2+w).."detune",(x-9)/7)
+  end
+  g.dirty = true;
+  ui.dirty = true;
+end
+
+
+-------- TRANSPOSE
+
+g.redraw.transpose = function()
+  local w = (state.window-1)*6
+  for i=1,6 do
+    gr:led(params:get((i+w).."transpose")+1,i+2,15)
+  end
+end
+
+g.key.transpose = function(x,y,z)
+  local w = (state.window-1)*6
+  if z==1 then
+    params:set((y-2+w).."transpose",x-1)
+  end
+  g.dirty = true;
+  ui.dirty = true;
+end
+
+
+
+-------- ONE
+
+g.redraw.one = function()
   local w = (state.window-1)*6
   if tr>w and tr<w+7 then
     gr:led(1,tr-w+2,5)
@@ -236,7 +315,7 @@ g.redraw.param = function()
   gr:led(params:get(tr.."transpose")+1,8,15)
 end
 
-g.key.param = function(x,y,z)
+g.key.one= function(x,y,z)
   local w = (state.window-1)*6
   if z==1 then
     if x==1 then

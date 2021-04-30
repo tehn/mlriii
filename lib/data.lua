@@ -16,7 +16,8 @@ state = {
   clipactiontimer = nil
 }
 
-pages = {"track", "cut", "clip", "param"}
+pages = {"track", "clip", "cut", "level","pan","detune","transpose","one"}
+page_lookup = tab.invert(pages)
 
 clip = {}
 

@@ -6,6 +6,8 @@ NOW
   - VOLUME CURVES (controlspec?)
 
 FIXES/IDEAS/WHAT
+  - SINGLE track screen: octave/rev, cut, level, pan, detune, transpose (ALT-PAGE-BAR)
+    - UI keys change track up/down
   - follow select on track page weird if ALT is locked on
   - transpose param needs to be OPTION
     - display correctly ie re-build options based on trans_n and trans_d tables (also put in params)
@@ -67,7 +69,6 @@ FIXES/IDEAS/WHAT
 
 - BONUS
   - echo
-  - transpose scale: set as ratios (et is x/12)
 
 ---
 

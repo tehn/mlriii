@@ -53,6 +53,21 @@ function enc(n,d)
   end
 end
 
+-------- NAV
+
+function nav_r()
+  local g = track[tr].group
+  local stat = (group[g].rec and "+" or "") .. (group[g].play and ">" or "")
+  screen.level(15)
+  screen.move(0,12)
+  screen.font_size(16)
+  screen.text(state.page)
+  screen.move(127,12)
+  screen.text_right(stat..tr)
+  screen.font_size(8)
+end
+
+
 -------- META
 
 function meta_r()
@@ -91,18 +106,9 @@ end
 -------- TRACK
 
 ui.redraw.track = function()
-  local g = track[tr].group
-  local stat = (group[g].rec and "+" or "") .. (group[g].play and ">" or "")
-  screen.level(15)
-  screen.move(0,12)
-  screen.font_size(16)
-  screen.text("track")
-  screen.move(127,12)
-  screen.text_right(stat..tr)
-
+  nav_r()
   meta_r()
 
-  screen.font_size(8)
   screen.move(0,54)
   screen.text(track[tr].clip.n .."/".. track[tr].clip.name)
   screen.move(0,62)
@@ -126,35 +132,10 @@ ui.enc.track = function(n,d)
 end
 
 
--------- CUT
-
-ui.redraw.cut = function()
-  screen.level(15)
-  screen.move(0,12)
-  screen.font_size(16)
-  screen.text("cut")
-  screen.move(127,12)
-  screen.text_right(tr)
-
-  meta_r()
-end
-
-ui.key.cut = function(n,z) meta_k(n,z) end
-
-ui.enc.cut = function(n,d) meta_e(n,d) end
-
-
 -------- CLIP
 
 ui.redraw.clip = function()
-  screen.level(15)
-  screen.move(0,12)
-  screen.font_size(16)
-  screen.text("clip")
-  screen.move(127,12)
-  screen.text_right(tr)
-  screen.font_size(8)
-
+  nav_r()
   if k1 then
     screen.level(10)
     screen.move(0,28)
@@ -275,17 +256,63 @@ ui.enc.clip = function(n,d)
 end
 
 
--------- PARAM
+-------- CUT
 
-ui.redraw.param = function()
-  screen.level(15)
-  screen.move(0,12)
-  screen.font_size(16)
-  screen.text("param")
-  screen.move(127,12)
-  screen.text_right(tr)
+ui.redraw.cut = function()
+  nav_r()
+  meta_r()
+end
 
-  screen.font_size(8)
+ui.key.cut = function(n,z) meta_k(n,z) end
+
+ui.enc.cut = function(n,d) meta_e(n,d) end
+
+
+-------- LEVEL
+
+ui.redraw.level = function()
+  local w = (state.window-1)*6
+  nav_r()
+  for i=1,6 do
+    screen.level(3)
+    screen.move(0,i*8+16)
+    screen.text(w+i)
+    screen.level(state.page=="level" and 15 or 3)
+    screen.move(25,i*8+16)
+    screen.text_right(params:string((w+i).."level"))
+    screen.level(state.page=="pan" and 15 or 3)
+    screen.move(50,i*8+16)
+    screen.text_right(params:string((w+i).."pan"))
+    screen.level(state.page=="detune" and 15 or 3)
+    screen.move(75,i*8+16)
+    screen.text_right(params:string((w+i).."detune"))
+    screen.level(state.page=="transpose" and 15 or 3)
+    screen.move(100,i*8+16)
+    screen.text_right(params:string((w+i).."transpose"))
+  end
+end
+
+ui.key.level = function(n,z) end
+ui.enc.level= function(n,d) end
+
+ui.redraw.pan = ui.redraw.level
+ui.redraw.detune = ui.redraw.level
+ui.redraw.transpose = ui.redraw.level
+
+ui.key.pan = ui.key.level
+ui.key.detune = ui.key.level
+ui.key.transpose = ui.key.level
+
+ui.enc.pan = ui.enc.level
+ui.enc.detune = ui.enc.level
+ui.enc.transpose = ui.enc.level
+
+
+-------- ONE
+
+ui.redraw.one = function()
+  nav_r()
+
   screen.level(10)
   screen.move(0,L3)
   screen.text("level")
@@ -304,8 +331,7 @@ ui.redraw.param = function()
   screen.text("transpose")
   screen.move(127,L8)
   screen.text_right(params:string(tr.."transpose"))
-
 end
 
-ui.key.param = function(n,z) end
-ui.enc.param = function(n,d) end
+ui.key.one = function(n,z) end
+ui.enc.one = function(n,z) end

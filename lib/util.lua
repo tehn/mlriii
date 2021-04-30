@@ -1,3 +1,5 @@
+tab = require("tabutil")
+
 function set_page(x)
   state.page = x
   state.menusel = 1
