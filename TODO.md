@@ -6,8 +6,6 @@ NOW
   - VOLUME CURVES (controlspec?)
 
 FIXES/IDEAS/WHAT
-  - SINGLE track screen: octave/rev, cut, level, pan, detune, transpose (ALT-PAGE-BAR)
-    - UI keys change track up/down
   - follow select on track page weird if ALT is locked on
   - transpose param needs to be OPTION
     - display correctly ie re-build options based on trans_n and trans_d tables (also put in params)
@@ -16,7 +14,7 @@ FIXES/IDEAS/WHAT
   - alt+enc val edit = global? ie for levels, overdub/etc
   - mute (group) (alt-play/stop?)
   - alt-E1 assignable?
-  - UI: show 6 rows. grp, oct/rev, clipname
+  - TRACK UI: show 6 rows. grp, oct/rev, clipname
   - adc input param levels
 
 - TRACK
