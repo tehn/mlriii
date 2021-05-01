@@ -3,13 +3,15 @@
 ## TODO
 
 NOW
+  - UI. left knob = meta, right knob = page setting
+    - track: overdub, bmp follow
+    - cut: steps, mode
   - VOLUME CURVES (controlspec?)
 
 FIXES/IDEAS/WHAT
   - follow select on track page weird if ALT is locked on
   - transpose param needs to be OPTION
     - display correctly ie re-build options based on trans_n and trans_d tables (also put in params)
-  - CUT, show stopped play position if group START would resume there
   - FADES?
   - alt+enc val edit = global? ie for levels, overdub/etc
   - mute (group) (alt-play/stop?)
@@ -19,9 +21,8 @@ FIXES/IDEAS/WHAT
 
 - TRACK
   - screen ui ALT edit menu: overdub (group), #steps, cut mode, bmp follow/map
-  
+
 - CUT
-  - grid key loop set
   - cut mode: cut/clearloop, cut/moveloop, cut/stop(at end or loopend), momentary
   - screen ui: waveform, playback position (obey follow). cut mode.
   - alt shapes:

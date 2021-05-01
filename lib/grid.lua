@@ -1,7 +1,16 @@
 alt = false
 alt_lock = false
+altkeycount = 0
 
-keycount = 0
+held = {0,0,0,0,0,0}
+queue = {{},{},{},{},{},{}}
+keystate = {
+  {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+  {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+  {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+  {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+  {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+  {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} }
 
 gr = grid.connect()
 
@@ -32,16 +41,26 @@ function grid_redraw()
 end
 
 function gr.key(x,y,z)
-  keycount = keycount + z
+  altkeycount = altkeycount + z -- counter for alt hold
+  -- held/state logic for gesture tracking
+  if y>2 then
+    local row = y-2
+    keystate[row][x] = z
+    held[row] = 0
+    for i=1,16 do
+      held[row] = held[row] + keystate[row][i]
+    end
+    queue[row][held[row]] = x -- sortof a queue
+  end
   -- alt logic
   if x==16 and y==1 then
     if z==1 and alt==false then
-      keycount = 0
+      altkeycount = 0
       alt = true
     elseif z==1 and alt_lock==true then
       alt = false
     elseif z==0 and alt_lock==false then
-      if keycount == 0  then
+      if altkeycount == 0  then
         alt_lock = true
       else alt = false end
     end
@@ -198,19 +217,76 @@ g.redraw.cut = function()
     local y = i + 2
     local g = track[t].group
     local x = group[g].pos_grid
-    if group[g].play and group[g].track.n == t then
-      gr:led(x,y,15)
+    if group[g].track.n == t then
+      if track[t].loop then -- highlight loop
+        for i=track[t].loop_start,track[t].loop_end do
+          gr:led(i,y,3)
+        end
+      end
+      if group[g].play then
+        gr:led(x,y,15) -- playing
+      else
+        gr:led(x,y,5) -- stopped but active
+      end
     end
   end
 end
 
 g.key.cut = function(x,y,z)
+  local row = y-2
+  local w = (state.window-1)*6
+  local t = track[y-2+w]
+  local g = t.group
   if z==1 then
-    local w = (state.window-1)*6
-    local t = y-2+w
-    local g = track[t].group
     if state.follow then tr = t end
-    event({type="cut",track=t,pos=x})
+    -- FIXME: all of this needs x limited to steps
+    -- FIXME: THESE LOOP SETS MUST BE EVENTS
+    if t.mode == "normal" then
+      if held[row] == 1 then
+        event({type="cut",track=t.n,pos=x})
+        if t.loop then
+          t.loop = false
+          t.loop_start = 1
+          t.loop_end = t.steps
+          t.loop_len = t.steps
+          sc.set_inner_loop(g)
+        end
+      else 
+        if x > queue[t.n][1] then
+          t.loop_start = queue[t.n][1]
+          t.loop_end = x 
+          t.loop_len = x + 1 - t.loop_start
+          t.loop = true
+          sc.set_inner_loop(g)
+        end
+      end
+    elseif t.mode == "shift" then
+      if held[row] == 1 then
+        event({type="cut",track=t.n,pos=x})
+        if x+t.loop_len > t.steps then
+          x = t.steps - t.loop_len + 1
+        end
+        t.loop_start = x
+        t.loop_end = x + t.loop_len - 1
+        sc.set_inner_loop(g)
+      else 
+        if x > queue[t.n][1] then
+          t.loop_start = queue[t.n][1]
+          t.loop_end = x 
+          t.loop_len = x + 1 - t.loop_start
+          t.loop = true
+          sc.set_inner_loop(g)
+        end
+      end
+    elseif t.mode == "hold" then
+      event({type="cut",track=t.n,pos=x})
+    end
+  else -- z==0
+    if t.mode == "hold" then
+      if held[row] == 0 then
+        event({type="stop",group=g})
+      end
+    end
   end
 end
 

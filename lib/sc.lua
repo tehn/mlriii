@@ -6,8 +6,8 @@ function sc.init()
 
   for i=1,4 do
     softcut.enable(i,1)
-    softcut.level_input_cut(1, i, 0.7)
-    softcut.level_input_cut(2, i, 0.7)
+    --softcut.level_input_cut(1, i, 0.7) -- this is set my param system
+    --softcut.level_input_cut(2, i, 0.7)
     softcut.fade_time(i,FADE)
     softcut.level_slew_time(i,0.1) -- FIXME could be too big
     softcut.rate_slew_time(i,0)
@@ -29,8 +29,8 @@ function sc.init()
 end
 
 function sc.off(g)
-    -- TODO: make sure rec isn't on!!
-    -- stop basically jumps to the "dead second" at the start, for clean cut in/out
+  -- TODO: make sure rec isn't on!!
+  -- stop basically jumps to the "dead second" at the start, for clean cut in/out
   softcut.rec_level(g,0)
   softcut.level(g,0)
   softcut.loop_start(g,0)
@@ -39,23 +39,43 @@ function sc.off(g)
 end 
 
 --function sc.open_loop(g)
-  --softcut.loop_start(g,0)
-  --softcut.loop_end(g,1000)
+--softcut.loop_start(g,0)
+--softcut.loop_end(g,1000)
 --end
 
 function sc.set_clip(g)
   local c = group[g].track.clip
+  local t = group[g].track
   --print(c.n.." SET CLIP")
   --print("  start: "..c.pos_start)
   --print("  end:   "..c.pos_end)
   --print("  ch:    "..c.ch)
 
-  softcut.loop(g,1) -- FIXME play modes
-  softcut.loop_start(g,c.pos_start)
-  softcut.loop_end(g,c.pos_end)
   softcut.buffer(g,c.ch)
-  --softcut.position(g,c.pos_start)
+  softcut.loop(g,1) -- FIXME play modes
+   sc.set_inner_loop(g)
 
+  sc.set_phase(g)
+end
+
+function sc.set_clips()
+  for i=1,4 do sc.set_clip(i) end
+end
+
+function sc.set_inner_loop(g)
+  local c = group[g].track.clip
+  local t = group[g].track
+  if t.loop then
+    softcut.loop_start(g,t.cuts[t.loop_start])
+    softcut.loop_end(g,t.cuts[t.loop_end+1])
+  else
+    softcut.loop_start(g,c.pos_start)
+    softcut.loop_end(g,c.pos_end)
+  end
+end
+
+function sc.set_phase(g)
+  local c = group[g].track.clip
   local q = c.len/group[g].track.steps
 
   local off = 0
@@ -68,10 +88,6 @@ function sc.set_clip(g)
   --print("  "..q.." "..off)
   softcut.phase_quant(g,q)
   softcut.phase_offset(g,off)
-end
-
-function sc.set_clips()
-  for i=1,4 do sc.set_clip(i) end
 end
 
 function sc.set_level(g)
@@ -137,7 +153,7 @@ function phase(n, x)
   local pp = ((x - group[n].track.clip.pos_start) / group[n].track.clip.len)-- * 16 --TODO 16=div
   --if n==1 then print("> ",x,pp,math.floor(pp*16)) end
   x = math.floor(pp * 16)+1
-  if x ~= group[n].pos_grid then
+  if x ~= group[n].pos_grid and group[n].play then
     group[n].pos_grid = x
     if state.page == "cut" then g.dirty = true end
   end

@@ -19,6 +19,9 @@ state = {
 pages = {"track", "clip", "cut", "level","pan","detune","transpose","one"}
 page_lookup = tab.invert(pages)
 
+cut_modes = {"normal", "shift", "once", "hold"}
+cut_modes_lookup = tab.invert(cut_modes)
+
 clip = {}
 
 for i=1,16 do
@@ -42,8 +45,9 @@ for i=1,24 do
     n = i,
     group = g[i],
     clip = clip[((i-1)%16)+1],
-    mode = "normal", -- also "shift" (move loop) "hold" (slice)
-    loop = true,
+    --mode = "normal", -- also "shift" (move loop) "once" (stops at end) "hold" (slice)
+    mode = cut_modes[1],
+    loop = false,
     loop_start = 1,
     loop_end = 16,
     loop_len = 16,
@@ -77,7 +81,7 @@ for i=1,4 do
     mute = 1,
     track = track[t[i]],
     position = 0,
-    pos_grid = 0
+    pos_grid = 1
   }
 end
 
@@ -86,7 +90,8 @@ end
 function calc_cuts(t)
   track[t].cuts = {}
   local stepsize = track[t].clip.len / track[t].steps
-  for i=1,track[t].steps do
+  --for i=1,track[t].steps do
+  for i=1,17 do -- extra room for inner-loop gesture
     track[t].cuts[i] = track[t].clip.pos_start + (i-1)*stepsize
   end
 end
@@ -134,6 +139,15 @@ function set_transpose(i,x)
   if g.track.n == i and g.play then
     sc.set_rate(i)
   end
+end
+
+function init_cut_mode(t)
+  if track[t].mode == "shift" then
+    track[t].loop = true
+  elseif track[t].mode == "hold" then
+    track[t].loop = false
+  end
+  sc.set_inner_loop(track[t].group)
 end
 
 

@@ -260,12 +260,28 @@ end
 
 ui.redraw.cut = function()
   nav_r()
-  meta_r()
+  --meta_r()
+  screen.move(0,62)
+  screen.text(track[tr].mode)
+  screen.move(127,62)
+  screen.text_right(track[tr].bpm_sync and "follow" or "free")
 end
 
-ui.key.cut = function(n,z) meta_k(n,z) end
+ui.key.cut = function(n,z)
+  if z==1 then
+    if n==2 then
+      local m = cut_modes_lookup[track[tr].mode]
+      m = (m%4)+1
+      track[tr].mode = cut_modes[m]
+    elseif n==3 then
+      track[tr].bpm_sync = not track[tr].bpm_sync
+    end
+    init_cut_mode(tr)
+    ui.dirty = true
+  end
+end
 
-ui.enc.cut = function(n,d) meta_e(n,d) end
+ui.enc.cut = function(n,d) end
 
 
 -------- LEVEL
