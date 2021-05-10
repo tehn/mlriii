@@ -4,11 +4,14 @@
 
 NOW
   - UI. left knob = meta, right knob = page setting
+    - K2 is toggle between views (info=rows, edit=select+modify?)
+      - TRACK UI: show 6 rows. grp, oct/rev, clipname
     - track: overdub, bmp follow
     - cut: steps, mode
-  - VOLUME CURVES (controlspec?)
 
 FIXES/IDEAS/WHAT
+  - always-present vu's
+  - fix VOLUME CURVES (controlspec?)
   - follow select on track page weird if ALT is locked on
   - transpose param needs to be OPTION
     - display correctly ie re-build options based on trans_n and trans_d tables (also put in params)
@@ -16,13 +19,13 @@ FIXES/IDEAS/WHAT
   - alt+enc val edit = global? ie for levels, overdub/etc
   - mute (group) (alt-play/stop?)
   - alt-E1 assignable?
-  - TRACK UI: show 6 rows. grp, oct/rev, clipname
   - adc input param levels
 
 - TRACK
-  - screen ui ALT edit menu: overdub (group), #steps, cut mode, bmp follow/map
+  - screen ui ALT edit menu: overdub (group), bmp follow/map
 
 - CUT
+  - #steps, cut mode
   - cut mode: cut/clearloop, cut/moveloop, cut/stop(at end or loopend), momentary
   - screen ui: waveform, playback position (obey follow). cut mode.
   - alt shapes:
@@ -38,13 +41,11 @@ FIXES/IDEAS/WHAT
     - reset all positions (len/separation settings? currently 2s/0sep. bar size? bpm?)
     ? move clip start to end of previous clip
 
-- REC
-  - overdub setting (preserve existing)
-
 - QUEUE: like recall but one-off. tap once, queue a bunch of whatever. tap again: does all at once.
   - alt-queue: redo last (if stopped) or cancel (if rec'ing)
 
-- Q1/Q2: toggle between and off. if held then event-pressed, toggle off after. alt-q to config (while held) with e2/e3
+- Q1/Q2: toggle between and off. if held then event-pressed, toggle off after
+  - config divisions with parameters
   - blink tempo divisions
   - new events hit queue quantizer before pattern recorders
     - might need an event origin var (live vs. pattern)
@@ -61,8 +62,6 @@ FIXES/IDEAS/WHAT
   - volume, pan, filter, transpose, detune, $echo
   - slews?
   - UI: text labels, current vals
-
-
 
 
 
